@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/vvetta/exact-time/ex_time"
+	"github.com/vvetta/exact-time/extime"
 )
 
 const (
-	NTPHOST = "0.beevik-ntp.pool.ntp.org"
+	defautlNTPHOST = "0.beevik-ntp.pool.ntp.org"
 )
 
 func main() {
@@ -19,18 +20,18 @@ func main() {
 	var host string
 
 	if hostEnv == "" {
-		host = NTPHOST
+		host = defautlNTPHOST
 	} else {
 		host = hostEnv
 	}
 
-	ntpServer := ex_time.NewNTPServer(host)
+	ntpServer := extime.NewNTPServer(host)
 
-	time, err := ntpServer.GetExactTime()
+	exactTime, err := ntpServer.GetExactTime()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v \n", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("Exact time: %v", time)
+	fmt.Printf("Exact time: %v", exactTime.Format(time.RFC3339Nano))
 }
